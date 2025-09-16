@@ -29,4 +29,3 @@ export default StyleSheet.create({
     shadowRadius: 2,
   },
 });
-
