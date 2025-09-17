@@ -24,53 +24,25 @@ export default function ListScreen() {
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View
-            style={{
-              backgroundColor: "#F9F5E3",
-              borderRadius: 18,
-              padding: 18,
-              marginBottom: 18,
-              shadowColor: "#A3C4BC",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.12,
-              shadowRadius: 6,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={styles.listCard}>
+            <View style={styles.listLeft}>
               <MaterialCommunityIcons
                 name="home-city"
                 size={32}
                 color="#A3C4BC"
-                style={{ marginRight: 12 }}
+                style={styles.iconRightMargin}
               />
-              <Text
-                style={{ fontSize: 20, color: "#6B705C", fontWeight: "600" }}
-              >
-                {item.title}
-              </Text>
+              <Text style={styles.listTitle}>{item.title}</Text>
             </View>
             <Pressable
               onPress={() => handleLejLokale(item.title)}
               style={({ pressed }) => [
-                {
-                  backgroundColor: pressed ? "#6B705C" : "#A3C4BC",
-                  paddingVertical: 8,
-                  paddingHorizontal: 18,
-                  borderRadius: 12,
-                  marginLeft: 12,
-                  shadowColor: "#A3C4BC",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.12,
-                  shadowRadius: 2,
-                },
+                styles.smallButton,
+                { marginLeft: 12 },
+                pressed && styles.smallButtonPressed,
               ]}
             >
-              <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>
-                Lej lokale
-              </Text>
+              <Text style={styles.buttonText}>Lej lokale</Text>
             </Pressable>
           </View>
         )}

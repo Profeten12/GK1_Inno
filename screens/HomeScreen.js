@@ -75,18 +75,11 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Festlokaler i nærheden</Text>
 
-      {errorMsg ? (
-        <Text style={{ color: "#6B705C", marginBottom: 8 }}>{errorMsg}</Text>
-      ) : null}
+      {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
       <MapView
         ref={mapRef}
-        style={{
-          width: "100%",
-          height: 350,
-          borderRadius: 16,
-          marginBottom: 24,
-        }}
+        style={styles.map}
         initialRegion={initialRegion}
         showsUserLocation
       >
@@ -98,17 +91,7 @@ export default function HomeScreen() {
             accessibilityLabel={`Marker for ${item.title}`}
           >
             {/* Custom marker-ikon i en lille badge */}
-            <View
-              style={{
-                backgroundColor: "#F9F5E3",
-                borderRadius: 24,
-                padding: 8,
-                alignItems: "center",
-                justifyContent: "center",
-                borderWidth: 2,
-                borderColor: "#A3C4BC",
-              }}
-            >
+            <View style={styles.markerBadge}>
               <MaterialCommunityIcons
                 name="home-city"
                 size={32}
@@ -117,49 +100,18 @@ export default function HomeScreen() {
             </View>
 
             <Callout tooltip onPress={() => handleLejLokale(item.title)}>
-              <View
-                style={{
-                  alignItems: "center",
-                  padding: 12,
-                  backgroundColor: "#fff",
-                  borderRadius: 16,
-                  minWidth: 140,
-                  elevation: 4,
-                  shadowColor: "#A3C4BC",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.18,
-                  shadowRadius: 6,
-                  marginBottom: 32, // løft callout over pin
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    marginBottom: 6,
-                    color: "#6B705C",
-                  }}
-                >
-                  {item.title}
-                </Text>
+              <View style={styles.calloutContainer}>
+                <Text style={styles.calloutTitle}>{item.title}</Text>
 
                 <Pressable
                   onPress={() => handleLejLokale(item.title)}
                   accessibilityLabel={`Lej ${item.title}`}
                   style={({ pressed }) => [
-                    {
-                      backgroundColor: pressed ? "#6B705C" : "#A3C4BC",
-                      paddingVertical: 8,
-                      paddingHorizontal: 18,
-                      borderRadius: 12,
-                      marginTop: 2,
-                    },
+                    styles.smallButton,
+                    pressed && styles.smallButtonPressed,
                   ]}
                 >
-                  <Text
-                    style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}
-                  >
-                    Lej lokale
-                  </Text>
+                  <Text style={styles.buttonText}>Lej lokale</Text>
                 </Pressable>
               </View>
             </Callout>
@@ -171,30 +123,11 @@ export default function HomeScreen() {
         onPress={goToUserLocation}
         accessibilityLabel="Gå til min lokation"
         style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? "#6B705C" : "#A3C4BC",
-            paddingVertical: 12,
-            paddingHorizontal: 24,
-            borderRadius: 16,
-            alignSelf: "center",
-            marginTop: 8,
-            shadowColor: "#A3C4BC",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.15,
-            shadowRadius: 4,
-          },
+          styles.actionButton,
+          pressed && styles.actionButtonPressed,
         ]}
       >
-        <Text
-          style={{
-            color: "#fff",
-            fontSize: 16,
-            fontWeight: "600",
-            letterSpacing: 1,
-          }}
-        >
-          Gå til min lokation
-        </Text>
+        <Text style={styles.actionButtonText}>Gå til min lokation</Text>
       </Pressable>
     </View>
   );
