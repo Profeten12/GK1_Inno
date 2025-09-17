@@ -14,7 +14,8 @@ export default function AboutScreen() {
           marginTop: 12,
         }}
       >
-        Denne app er lavet til GK1 - Innovationsprojekt
+        Denne app er lavet til GK1 - Innovation og ny teknologi på Copenhagen
+        Business School.
       </Text>
     </View>
   );
