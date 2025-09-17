@@ -68,7 +68,7 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 6,
-    marginBottom: 32, // lift callout above pin
+    marginBottom: 32,
   },
   calloutTitle: {
     fontWeight: "bold",
