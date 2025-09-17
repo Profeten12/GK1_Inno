@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import styles from "../styles";
 
@@ -17,13 +18,17 @@ export default function HomeScreen() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Tilladelse til lokation blev ikke givet");
-        return;
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Tilladelse til lokation blev ikke givet");
+          return;
+        }
+        const loc = await Location.getCurrentPositionAsync({});
+        setLocation(loc.coords);
+      } catch (e) {
+        setErrorMsg("Kunne ikke hente din lokation");
       }
-      const loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc.coords);
     })();
   }, []);
 
@@ -54,6 +59,8 @@ export default function HomeScreen() {
       );
     } else if (errorMsg) {
       Alert.alert("Lokation", errorMsg);
+    } else {
+      Alert.alert("Lokation", "Henter din lokation… prøv igen om et øjeblik.");
     }
   };
 
@@ -67,6 +74,10 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Festlokaler i nærheden</Text>
+
+      {errorMsg ? (
+        <Text style={{ color: "#6B705C", marginBottom: 8 }}>{errorMsg}</Text>
+      ) : null}
 
       <MapView
         ref={mapRef}
@@ -84,7 +95,27 @@ export default function HomeScreen() {
             key={item.id}
             coordinate={{ latitude: item.latitude, longitude: item.longitude }}
             title={item.title}
+            accessibilityLabel={`Marker for ${item.title}`}
           >
+            {/* Custom marker-ikon i en lille badge */}
+            <View
+              style={{
+                backgroundColor: "#F9F5E3",
+                borderRadius: 24,
+                padding: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                borderWidth: 2,
+                borderColor: "#A3C4BC",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="home-city"
+                size={32}
+                color="#A3C4BC"
+              />
+            </View>
+
             <Callout tooltip onPress={() => handleLejLokale(item.title)}>
               <View
                 style={{
@@ -92,7 +123,7 @@ export default function HomeScreen() {
                   padding: 12,
                   backgroundColor: "#fff",
                   borderRadius: 16,
-                  minWidth: 120,
+                  minWidth: 140,
                   elevation: 4,
                   shadowColor: "#A3C4BC",
                   shadowOffset: { width: 0, height: 2 },
@@ -110,31 +141,49 @@ export default function HomeScreen() {
                 >
                   {item.title}
                 </Text>
-                <Text
-                  style={{ color: "#A3C4BC", fontSize: 16, fontWeight: "600" }}
+
+                <Pressable
+                  onPress={() => handleLejLokale(item.title)}
+                  accessibilityLabel={`Lej ${item.title}`}
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? "#6B705C" : "#A3C4BC",
+                      paddingVertical: 8,
+                      paddingHorizontal: 18,
+                      borderRadius: 12,
+                      marginTop: 2,
+                    },
+                  ]}
                 >
-                  Lej lokale
-                </Text>
+                  <Text
+                    style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}
+                  >
+                    Lej lokale
+                  </Text>
+                </Pressable>
               </View>
             </Callout>
           </Marker>
         ))}
       </MapView>
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#A3C4BC",
-          paddingVertical: 12,
-          paddingHorizontal: 24,
-          borderRadius: 16,
-          alignSelf: "center",
-          marginTop: 8,
-          shadowColor: "#A3C4BC",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.15,
-          shadowRadius: 4,
-        }}
+      <Pressable
         onPress={goToUserLocation}
+        accessibilityLabel="Gå til min lokation"
+        style={({ pressed }) => [
+          {
+            backgroundColor: pressed ? "#6B705C" : "#A3C4BC",
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            borderRadius: 16,
+            alignSelf: "center",
+            marginTop: 8,
+            shadowColor: "#A3C4BC",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.15,
+            shadowRadius: 4,
+          },
+        ]}
       >
         <Text
           style={{
@@ -146,7 +195,7 @@ export default function HomeScreen() {
         >
           Gå til min lokation
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
