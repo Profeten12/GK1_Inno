@@ -2,7 +2,7 @@
 
 ## Demo Video
 
-[Link til demovideo](https://your-demo-link.com)
+[Link til demovideo](https://www.youtube.com/shorts/LT83ZGBPfpc)
 
 ## Features
 
